@@ -1,0 +1,5 @@
+{
+  "rust-analyzer.cargo.target": "loongarch64-unknown-none-softfloat",
+  "rust-analyzer.cargo.allTargets": false,
+  "rust-analyzer.cargo.features": "all"
+}

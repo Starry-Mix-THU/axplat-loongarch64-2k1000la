@@ -1,0 +1,31 @@
+[package]
+name = "axplat-loongarch64-2k1000la"
+version = "0.1.0"
+edition = "2024"
+keywords = ["arceos", "os", "hal", "embedded", "loongarch"]
+categories = ["embedded", "no-std", "hardware-support", "os"]
+
+[features]
+fp-simd = ["axcpu/fp-simd"]
+irq = ["axplat/irq"]
+rtc = ["dep:chrono"]
+smp = ["axplat/smp", "kspin/smp"]
+
+[dependencies]
+chrono = { version = "0.4", default-features = false, optional = true }
+kspin = "0.1"
+lazyinit = "0.2"
+log = "0.4"
+loongArch64 = "0.2.4"
+uart_16550 = "0.4.0"
+page_table_entry = "0.5"
+
+axconfig-macros = "0.2"
+axcpu = "0.2"
+axplat = "0.1"
+
+[package.metadata.docs.rs]
+targets = ["loongarch64-unknown-none"]
+
+[patch.crates-io]
+axplat = { git = "https://github.com/Starry-Mix-THU/axplat_crates.git" }

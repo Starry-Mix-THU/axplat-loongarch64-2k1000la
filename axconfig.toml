@@ -1,0 +1,104 @@
+# Architecture identifier.
+arch = "loongarch64"                            # str
+# Platform identifier.
+platform = "loongarch64-2k1000la"               # str
+# Platform package.
+package = "axplat-loongarch64-2k1000la"         # str
+
+#
+# Platform configs
+#
+[plat]
+# Number of CPUs.
+cpu-num = 1                           # uint
+# Base address of the whole physical memory.
+phys-memory-base = 0x9000_0000        # uint
+# Size of the whole physical memory. (2G)
+phys-memory-size = 0x8000_0000        # uint
+# Base physical address of the kernel image.
+kernel-base-paddr = 0x9000_0000       # uint
+
+# Linear mapping offset for uncached region.
+uncached-virt-offset = "0x8000_0000_0000_0000"   # uint
+# Linear mapping offset for cached region.
+cached-virt-offset = "0x9000_0000_0000_0000"     # uint
+# Base virtual address of the kernel image.
+kernel-base-vaddr = "0x9000_0000_9000_0000"     # uint
+# Offset of bus address and phys address. some boards, the bus address is
+# different from the physical address.
+phys-bus-offset = 0                             # uint
+# Kernel address space base.
+kernel-aspace-base = "0x8000_0000_0000_0000"    # uint
+# Kernel address space size.
+kernel-aspace-size = "0x1fff_ffff_ffff_f000"    # uint
+# Stack size on bootstrapping. (256K)
+boot-stack-size = 0x40000                       # uint
+
+#
+# Device specifications
+#
+[devices]
+# MMIO ranges with format (`base_paddr`, `size`).
+mmio-ranges = [[0x0, 0x8000_0000]]      # [(uint, uint)]
+# VirtIO MMIO ranges with format (`base_paddr`, `size`).
+virtio-mmio-ranges = []                 # [(uint, uint)]
+# Base physical address of the PCIe ECAM space.
+pci-ecam-base = 0xfe_0000_0000          # uint
+# End PCI bus number.
+pci-bus-end = 0x7f                      # uint
+# PCI device memory ranges.
+pci-ranges = [
+    [0, 0],
+    [0x4000_0000, 0x4000_0000],
+    [0x40_000_0000, 0x40_000_0000],
+]                                       # [(uint, uint)]
+# pmc: power-management@1fe27000 {
+#     compatible = "loongson,ls2k1000-pmc", "loongson,ls2k0500-pmc", "syscon";
+#     reg = <0x0 0x1fe27000 0x0 0x58>;
+#     interrupt-parent = <&liointc1>;
+#     interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
+#     loongson,suspend-address = <0x0 0x1c000500>;
+# 
+#     syscon-reboot {
+#         compatible = "syscon-reboot";
+#         offset = <0x30>;
+#         mask = <0x1>;
+#     };
+# 
+#     syscon-poweroff {
+#         compatible = "syscon-poweroff";
+#         regmap = <&pmc>;
+#         offset = <0x14>;
+#         mask = <0x3c00>;
+#         value = <0x3c00>;
+#     };
+# };
+pmc-paddr = 0x1fe2_7000                  # uint
+# uart0: serial@1fe20000 {
+#     compatible = "ns16550a";
+#     reg = <0x0 0x1fe20000 0x0 0x10>;
+#     clock-frequency = <125000000>;
+#     interrupt-parent = <&liointc0>;
+#     interrupts = <0x0 IRQ_TYPE_LEVEL_HIGH>;
+#     no-loopback-test;
+#     status = "disabled";
+# };
+uart-paddr = 0x1fe2_0000                # uint
+uart-interrupt = 0                      # uint
+
+# Timer interrupt frequency in Hz.
+timer-frequency = 10_000_000           # uint
+# Timer interrupt number.
+timer-irq = 11                          # uint
+
+# rtc0: rtc@1fe27800 {
+#     compatible = "loongson,ls2k1000-rtc";
+#     reg = <0x0 0x1fe27800 0x0 0x100>;
+#     interrupt-parent = <&liointc1>;
+#     interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
+#     status = "disabled";
+# };
+rtc-paddr = 0x1fe2_7800                 # uint
+
+platic-paddr = 0x10000000
+platic-interrupt = 3
