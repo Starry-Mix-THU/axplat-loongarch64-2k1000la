@@ -10,23 +10,26 @@ package = "axplat-loongarch64-2k1000la"         # str
 #
 [plat]
 # Number of CPUs.
-cpu-num = 1                           # uint
-# Base address of the whole physical memory.
-phys-memory-base = 0x9000_0000        # uint
-# Size of the whole physical memory. (2G)
-phys-memory-size = 0x8000_0000        # uint
-# Base physical address of the kernel image.
-kernel-base-paddr = 0x9000_0000       # uint
+cpu-num = 1                     # uint
+
+lowram-base = 0x0               # uint
+lowram-size = 0x1000_0000       # uint
+
+highram-base = 0x9000_0000      # uint
+highram-size = 0x3000_0000      # uint
 
 # Linear mapping offset for uncached region.
-uncached-virt-offset = "0x8000_0000_0000_0000"   # uint
+uncached-virt-offset = "0x8000_0000_0000_0000"  # uint
 # Linear mapping offset for cached region.
-cached-virt-offset = "0x9000_0000_0000_0000"     # uint
-# Base virtual address of the kernel image.
-kernel-base-vaddr = "0x9000_0000_9000_0000"     # uint
+cached-virt-offset = "0x9000_0000_0000_0000"    # uint
 # Offset of bus address and phys address. some boards, the bus address is
 # different from the physical address.
 phys-bus-offset = 0                             # uint
+
+# Base physical address of the kernel image.
+kernel-base-paddr = 0x9000_0000       # uint
+# Base virtual address of the kernel image.
+kernel-base-vaddr = "0x9000_0000_9000_0000"     # uint
 # Kernel address space base.
 kernel-aspace-base = "0x8000_0000_0000_0000"    # uint
 # Kernel address space size.
@@ -87,7 +90,7 @@ uart-paddr = 0x1fe2_0000                # uint
 uart-interrupt = 0                      # uint
 
 # Timer interrupt frequency in Hz.
-timer-frequency = 10_000_000           # uint
+timer-frequency = 10_000_000            # uint
 # Timer interrupt number.
 timer-irq = 11                          # uint
 

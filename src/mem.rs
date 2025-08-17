@@ -2,7 +2,8 @@ use axplat::mem::{MemIf, PhysAddr, RawRange, VirtAddr, pa, va};
 
 use crate::config::devices::MMIO_RANGES;
 use crate::config::plat::{
-    CACHED_VIRT_OFFSET, KERNEL_BASE_PADDR, PHYS_MEMORY_BASE, PHYS_MEMORY_SIZE, UNCACHED_VIRT_OFFSET,
+    CACHED_VIRT_OFFSET, HIGHRAM_BASE, HIGHRAM_SIZE, KERNEL_BASE_PADDR, LOWRAM_BASE, LOWRAM_SIZE,
+    UNCACHED_VIRT_OFFSET,
 };
 
 struct MemIfImpl;
@@ -14,7 +15,7 @@ impl MemIf for MemIfImpl {
     /// All memory ranges except reserved ranges (including the kernel loaded
     /// range) are free for allocation.
     fn phys_ram_ranges() -> &'static [RawRange] {
-        &[(PHYS_MEMORY_BASE, PHYS_MEMORY_SIZE)]
+        &[(LOWRAM_BASE, LOWRAM_SIZE), (HIGHRAM_BASE, HIGHRAM_SIZE)]
     }
 
     /// Returns all reserved physical memory ranges on the platform.
