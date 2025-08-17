@@ -103,7 +103,7 @@ pub(crate) unsafe extern "C" fn _start_secondary() -> ! {
     core::arch::naked_asm!("
         li.d        $t0, {uncached_virt_offset} | 0xf
         csrwr       $t0, {la_csr_dmwin0}
-        li.d        $t1, {cached_virt_offset} | 0xf
+        li.d        $t1, {cached_virt_offset} | 0x1f
         csrwr       $t1, {la_csr_dmwin1}
 
         la.abs      $t0, {sm_boot_stack_top}

@@ -2,8 +2,7 @@ use axplat::mem::{MemIf, PhysAddr, RawRange, VirtAddr, pa, va};
 
 use crate::config::devices::MMIO_RANGES;
 use crate::config::plat::{
-    CACHED_VIRT_OFFSET, HIGHRAM_BASE, HIGHRAM_SIZE, KERNEL_BASE_PADDR, LOWRAM_BASE, LOWRAM_SIZE,
-    UNCACHED_VIRT_OFFSET,
+    CACHED_VIRT_OFFSET, HIGHRAM_BASE, HIGHRAM_SIZE, LOWRAM_BASE, LOWRAM_SIZE, UNCACHED_VIRT_OFFSET,
 };
 
 struct MemIfImpl;
@@ -37,10 +36,13 @@ impl MemIf for MemIfImpl {
     /// Translates a physical address to a virtual address.
     fn phys_to_virt(paddr: PhysAddr) -> VirtAddr {
         let paddr = paddr.as_usize();
-        if paddr < KERNEL_BASE_PADDR {
-            va!(paddr + UNCACHED_VIRT_OFFSET)
-        } else {
+        if Self::phys_ram_ranges()
+            .iter()
+            .any(|&(base, size)| base <= paddr && paddr < base + size)
+        {
             va!(paddr + CACHED_VIRT_OFFSET)
+        } else {
+            va!(paddr + UNCACHED_VIRT_OFFSET)
         }
     }
 
