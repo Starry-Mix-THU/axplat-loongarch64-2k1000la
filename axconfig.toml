@@ -90,7 +90,7 @@ uart-paddr = 0x1fe2_0000                # uint
 uart-interrupt = 0                      # uint
 
 # Timer interrupt frequency in Hz.
-timer-frequency = 10_000_000            # uint
+timer-frequency = 1_000_000_000            # uint
 # Timer interrupt number.
 timer-irq = 11                          # uint
 
