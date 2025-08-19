@@ -2,7 +2,7 @@ use axplat::mem::{MemIf, PhysAddr, RawRange, VirtAddr, pa, va};
 
 use crate::config::devices::MMIO_RANGES;
 use crate::config::plat::{
-    CACHED_VIRT_OFFSET, HIGHRAM_BASE, HIGHRAM_SIZE, LOWRAM_BASE, LOWRAM_SIZE, UNCACHED_VIRT_OFFSET,
+    HIGHRAM_BASE, HIGHRAM_SIZE, LOWRAM_BASE, LOWRAM_SIZE, MMIO_VIRT_OFFSET, PHYS_VIRT_OFFSET,
 };
 
 struct MemIfImpl;
@@ -40,9 +40,9 @@ impl MemIf for MemIfImpl {
             .iter()
             .any(|&(base, size)| base <= paddr && paddr < base + size)
         {
-            va!(paddr + CACHED_VIRT_OFFSET)
+            va!(paddr + PHYS_VIRT_OFFSET)
         } else {
-            va!(paddr + UNCACHED_VIRT_OFFSET)
+            va!(paddr + MMIO_VIRT_OFFSET)
         }
     }
 
