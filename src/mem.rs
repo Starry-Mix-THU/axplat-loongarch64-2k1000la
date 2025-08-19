@@ -1,8 +1,8 @@
 use axplat::mem::{MemIf, PhysAddr, RawRange, VirtAddr, pa, va};
 
-use crate::config::devices::MMIO_RANGES;
+use crate::config::devices::{INITRD_RANGE, MMIO_RANGES};
 use crate::config::plat::{
-    HIGHRAM_BASE, HIGHRAM_SIZE, LOWRAM_BASE, LOWRAM_SIZE, MMIO_VIRT_OFFSET, PHYS_VIRT_OFFSET,
+    BOOT_VIRT_OFFSET, HIGHRAM_BASE, HIGHRAM_SIZE, LOWRAM_BASE, LOWRAM_SIZE, PHYS_VIRT_OFFSET,
 };
 
 struct MemIfImpl;
@@ -25,7 +25,7 @@ impl MemIf for MemIfImpl {
     /// Note that the ranges returned should not include the range where the
     /// kernel is loaded.
     fn reserved_phys_ram_ranges() -> &'static [RawRange] {
-        &[]
+        &[INITRD_RANGE]
     }
 
     /// Returns all device memory (MMIO) ranges on the platform.
@@ -35,19 +35,16 @@ impl MemIf for MemIfImpl {
 
     /// Translates a physical address to a virtual address.
     fn phys_to_virt(paddr: PhysAddr) -> VirtAddr {
-        let paddr = paddr.as_usize();
-        if Self::phys_ram_ranges()
-            .iter()
-            .any(|&(base, size)| base <= paddr && paddr < base + size)
-        {
-            va!(paddr + PHYS_VIRT_OFFSET)
-        } else {
-            va!(paddr + MMIO_VIRT_OFFSET)
-        }
+        va!(paddr.as_usize() + PHYS_VIRT_OFFSET)
     }
 
     /// Translates a virtual address to a physical address.
     fn virt_to_phys(vaddr: VirtAddr) -> PhysAddr {
-        pa!(vaddr.as_usize() & 0xffff_ffff_ffff)
+        let vaddr = vaddr.as_usize();
+        if vaddr & 0xffff_0000_0000_0000 == BOOT_VIRT_OFFSET {
+            pa!(vaddr - BOOT_VIRT_OFFSET)
+        } else {
+            pa!(vaddr - PHYS_VIRT_OFFSET)
+        }
     }
 }

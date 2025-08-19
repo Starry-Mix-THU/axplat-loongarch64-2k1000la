@@ -1,7 +1,7 @@
 use axplat::mem::{Aligned4K, pa, va};
 use page_table_entry::{GenericPTE, MappingFlags, loongarch64::LA64PTE};
 
-use crate::config::plat::{BOOT_STACK_SIZE, PHYS_VIRT_OFFSET};
+use crate::config::plat::{BOOT_STACK_SIZE, BOOT_VIRT_OFFSET, PHYS_VIRT_OFFSET};
 
 #[unsafe(link_section = ".bss.stack")]
 static mut BOOT_STACK: [u8; BOOT_STACK_SIZE] = [0; BOOT_STACK_SIZE];
@@ -46,7 +46,7 @@ fn enable_fp_simd() {
 fn init_mmu() {
     axcpu::init::init_mmu(
         axplat::mem::virt_to_phys(va!(&raw const BOOT_PT_L0 as usize)),
-        PHYS_VIRT_OFFSET,
+        BOOT_VIRT_OFFSET,
     );
 }
 
@@ -59,7 +59,7 @@ fn init_mmu() {
 unsafe extern "C" fn _start() -> ! {
     core::arch::naked_asm!("
         # Setup Stack
-        la.global   $sp, {boot_stack}
+        la.local    $sp, {boot_stack}
         li.d        $t0, {boot_stack_size}
         add.d       $sp, $sp, $t0       # setup boot stack
 
@@ -67,6 +67,11 @@ unsafe extern "C" fn _start() -> ! {
         bl          {enable_fp_simd}    # enable FP/SIMD instructions
         bl          {init_boot_page_table}
         bl          {init_mmu}          # setup boot page table and enable MMU
+
+        li.d        $t0, {boot_virt_offset}
+        sub.d       $sp, $sp, $t0
+        li.d        $t0, {phys_virt_offset}
+        add.d       $sp, $sp, $t0
 
         csrrd       $a0, 0x20           # cpuid
         li.d        $a1, 0              # TODO: parse dtb
@@ -78,6 +83,10 @@ unsafe extern "C" fn _start() -> ! {
         enable_fp_simd = sym enable_fp_simd,
         init_boot_page_table = sym init_boot_page_table,
         init_mmu = sym init_mmu,
+
+        boot_virt_offset = const BOOT_VIRT_OFFSET,
+        phys_virt_offset = const PHYS_VIRT_OFFSET,
+
         entry = sym axplat::call_main,
     )
 }

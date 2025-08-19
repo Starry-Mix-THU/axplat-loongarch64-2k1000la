@@ -3,13 +3,13 @@ use kspin::SpinNoIrq;
 use lazyinit::LazyInit;
 use uart_16550::MmioSerialPort;
 
-use crate::config::{devices::UART_PADDR, plat::MMIO_VIRT_OFFSET};
+use crate::config::{devices::UART_PADDR, plat::PHYS_VIRT_OFFSET};
 
 static UART: LazyInit<SpinNoIrq<MmioSerialPort>> = LazyInit::new();
 
 pub(crate) fn init_early() {
     UART.init_once({
-        let mut uart = unsafe { MmioSerialPort::new(MMIO_VIRT_OFFSET | UART_PADDR) };
+        let mut uart = unsafe { MmioSerialPort::new(PHYS_VIRT_OFFSET | UART_PADDR) };
         uart.init();
         SpinNoIrq::new(uart)
     });
