@@ -115,7 +115,7 @@ dependencies = [
 [[package]]
 name = "axplat"
 version = "0.1.0"
-source = "git+https://github.com/Starry-Mix-THU/axplat_crates.git#1a42cb064d340d7e00e7f83f6a172144c8c60a7a"
+source = "git+https://github.com/Starry-OS/axplat_crates.git#8f1476ea78832af5f11b7accd9c7ed3bba06ad7c"
 dependencies = [
  "axplat-macros",
  "bitflags 2.9.1",
