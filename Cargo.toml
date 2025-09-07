@@ -1,6 +1,6 @@
 [package]
 name = "axplat-loongarch64-2k1000la"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 keywords = ["arceos", "os", "hal", "embedded", "loongarch"]
 categories = ["embedded", "no-std", "hardware-support", "os"]
@@ -22,7 +22,7 @@ page_table_entry = "0.5"
 
 axconfig-macros = "0.2"
 axcpu = "0.2"
-axplat = "0.1"
+axplat = "0.2"
 
 [package.metadata.docs.rs]
 targets = ["loongarch64-unknown-none"]

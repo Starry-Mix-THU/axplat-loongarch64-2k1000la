@@ -1,4 +1,4 @@
-use axplat::irq::{HandlerTable, IrqHandler, IrqIf};
+use axplat::irq::{HandlerTable, IpiTarget, IrqHandler, IrqIf};
 use loongArch64::register::{
     ecfg::{self, LineBasedInterrupt},
     ticlr,
@@ -60,5 +60,9 @@ impl IrqIf for IrqIfImpl {
         if !IRQ_HANDLER_TABLE.handle(irq) {
             warn!("Unhandled IRQ {irq}");
         }
+    }
+
+    fn send_ipi(_irq_num: usize, _target: IpiTarget) {
+        todo!()
     }
 }
